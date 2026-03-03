@@ -29,6 +29,9 @@ Ce fichier contient pour chaque client :
 - Le mode de payement
 - La date de facturation
 
+On peut voir ici comment sera organisé la base de données
+[Modèle entité/association du projet](/archi-client-server/img/entite-asso.png)
+
 ## Opérations possibles sur les données
 
 Le système informatique doit permettre de réaliser les opérations suivantes :
