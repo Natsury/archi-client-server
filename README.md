@@ -30,6 +30,7 @@ Ce fichier contient pour chaque client :
 - La date de facturation
 
 On peut voir ici comment sera organisé la base de données
+
 ![Modèle entité/association du projet](/archi-client-server/img/entite-asso.png)
 
 ## Opérations possibles sur les données
