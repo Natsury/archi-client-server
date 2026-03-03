@@ -31,7 +31,7 @@ Ce fichier contient pour chaque client :
 
 On peut voir ici comment sera organisé la base de données
 
-![Modèle entité/association du projet](/archi-client-server/img/entite-asso.png)
+<img width="700" height="242" alt="entite-asso" src="https://github.com/user-attachments/assets/0284a222-70bd-46f7-add0-3512db0b7949" />
 
 ## Opérations possibles sur les données
 
