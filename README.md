@@ -17,6 +17,18 @@ Pour chacun des articles, on dispose des informations suivantes:
 Deux articles distincts diffèrent par leur référence. On considère dans le cadre de ce projet que le
 stock préexiste.
 
+## Facturation des clients
+
+Le magasin dispose d’un fichier qui décrit l’ensemble des factures (tickets de caisse) que les
+clients devront acquitter.
+
+Ce fichier contient pour chaque client :
+
+- Le total de la facture pour un client
+- Le détail des articles achetés
+- Le mode de payement
+- La date de facturation
+
 ## Opérations possibles sur les données
 
 Le système informatique doit permettre de réaliser les opérations suivantes :
