@@ -6,13 +6,13 @@ L'objectif ici est de mettre en place une architecture client/serveur.
 # Informations
 ## Gestion du stock
 
-Le système informatique dispose d’une base de données où sont décrits tous les articles du
-magasin. Pour chacun des articles, on dispose des informations suivantes:
+Le système informatique dispose d’une base de données où sont décrits tous les articles du magasin. 
+Pour chacun des articles, on dispose des informations suivantes:
 
-- La référence précise de l’article;
-- La famille de l’article;
-- Le prix unitaire de l’article;
-- Le nombre total d’exemplaires en stock.
+- La référence précise de l’article
+- La famille de l’article
+- Le prix unitaire de l’article
+- Le nombre total d’exemplaires en stock
 
 Deux articles distincts diffèrent par leur référence. On considère dans le cadre de ce projet que le
 stock préexiste.
@@ -27,8 +27,7 @@ Le système informatique doit permettre de réaliser les opérations suivantes :
 - Payer une facture : un client peut payer ce qu’il doit au magasin 
 - Consulter une facture : il doit être possible de voir la facture (ticket de caisse, format du fichier au choix)
 - Calculer le chiffre d’affaire à une date donnée en fonction des factures de cette date
-- Jouter un produit : on peut ajouter un certain nombre d’exemplaires d’un produit dans le catalogue (la référence du
-produit doit déjà exister).
+- Jouter un produit : on peut ajouter un certain nombre d’exemplaires d’un produit dans le catalogue (la référence du produit doit déjà exister)
 
 Les prix sont mis à jour tous les matins par le serveur du siège de l’entreprise. L’ensemble des facture est sauvegardé tous les soirs sur le serveur du de siège de l’entreprise.
 
