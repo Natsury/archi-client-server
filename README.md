@@ -43,7 +43,7 @@ Le système informatique doit permettre de réaliser les opérations suivantes :
 - Payer une facture : un client peut payer ce qu’il doit au magasin 
 - Consulter une facture : il doit être possible de voir la facture (ticket de caisse, format du fichier au choix)
 - Calculer le chiffre d’affaire à une date donnée en fonction des factures de cette date
-- Jouter un produit : on peut ajouter un certain nombre d’exemplaires d’un produit dans le catalogue (la référence du produit doit déjà exister)
+- Ajouter un produit : on peut ajouter un certain nombre d’exemplaires d’un produit dans le catalogue (la référence du produit doit déjà exister)
 
 Les prix sont mis à jour tous les matins par le serveur du siège de l’entreprise. L’ensemble des facture est sauvegardé tous les soirs sur le serveur du de siège de l’entreprise.
 
