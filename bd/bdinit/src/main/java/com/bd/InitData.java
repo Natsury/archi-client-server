@@ -11,7 +11,7 @@ public class InitData {
         String insertSQL = "INSERT INTO Article (Type, Prix, Stock) VALUES (?, ?, ?)";
         String[] types = {"Laptop", "Smartphone", "Clavier", "Souris", "Ecran", "Casque"};
         Random random = new Random();
-        
+        System.out.println("Starting data generation...");
         try {
             PreparedStatement pstmt = BD.getInstance().preparStatement(insertSQL);
             for (int i = 0; i < types.length ; i++) {
