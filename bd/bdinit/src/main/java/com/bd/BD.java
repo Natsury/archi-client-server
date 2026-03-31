@@ -82,7 +82,7 @@ public class BD {
 
             connection.createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS `Facture` ("
                     + "  `Num_Facture` int NOT NULL AUTO_INCREMENT,"
-                    + "  `Mode_paiement` date NOT NULL,"
+                    + "  `Mode_paiement` VARCHAR(50) NOT NULL,"
                     + "  `Date_fac` date NOT NULL,"
                     + "  `Prix_total` decimal(10,2) NOT NULL,"
                     + "  PRIMARY KEY (`Num_Facture`)"
