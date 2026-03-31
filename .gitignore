@@ -26,3 +26,8 @@ replay_pid*
 
 # Custom ignore rules
 ex.md
+mysql/
+*.env
+target/
+test/
+settings.json

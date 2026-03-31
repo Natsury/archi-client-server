@@ -1,0 +1,25 @@
+services:
+
+  bdcreation:
+    build: ./bd/
+    container_name: bd-creation
+    restart: no
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  mysql:
+    image: mysql:latest
+    container_name: archi-bd
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+      start_period: 45s
+    env_file:
+      - bd.env
+    ports:
+      - "3306:3306"
+    restart: always
+    volumes:
+      - ./bd/mysql:/var/lib/mysql
