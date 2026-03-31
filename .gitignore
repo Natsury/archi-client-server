@@ -30,4 +30,5 @@ mysql/
 *.env
 target/
 test/
-settings.json
+
+.vscode/
