@@ -27,7 +27,7 @@ public class InitData {
                     System.out.println("Article " + i + " inséré : " + type);
                 }
     
-                System.out.println("Génération terminée avec succès !"); 
+                System.out.println("Generation completed successfully !"); 
         } catch (Exception e) {
             throw new RuntimeException("Failed to insert data: " + e);
         }

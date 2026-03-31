@@ -26,6 +26,7 @@ public class BD {
         try {
             connect();
         } catch (Exception e) {
+            throw new RuntimeException("Failed to connect to the database: " + e);
         }
     }
 
@@ -65,7 +66,7 @@ public class BD {
                 System.out.print("Connection to the database closed successfully!");
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Failed to close the database connection: " + e);
         }
     }
 
@@ -96,7 +97,7 @@ public class BD {
                     + "  FOREIGN KEY (`Reference`) REFERENCES `Article`(`Reference`) ON DELETE CASCADE"
                     + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");
 
-            System.out.println("Database initialized successfully!");
+            System.out.println("Database initialized successfully !");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -106,7 +107,6 @@ public class BD {
         try {
             return connection.prepareStatement(sql);
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new RuntimeException("Failed to prepare statement: " + sql);
         }
     }
