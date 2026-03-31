@@ -8,6 +8,19 @@ services:
       mysql:
         condition: service_healthy
 
+  rmi:
+    build: ./rmi/
+    container_name: rmi_server
+    restart: always
+    ports:
+      - "9090:9090"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "9090"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
   mysql:
     image: mysql:latest
     container_name: archi-bd
