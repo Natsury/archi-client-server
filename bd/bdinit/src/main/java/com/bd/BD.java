@@ -44,7 +44,6 @@ public class BD {
                         + "/" + properties.getProperty("MYSQL_DATABASE"),
                         properties.getProperty("MYSQL_USER"),
                         properties.getProperty("MYSQL_PASSWORD"));
-
                 System.out.println("Connection to the database established successfully!");
             } catch (SQLException e) {
                 tries--;
@@ -56,7 +55,9 @@ public class BD {
                 throw new RuntimeException(e);
             }
         }
-        throw new RuntimeException("Failed to connect to the database after multiple attempts.");
+        if (connection == null) {
+            throw new RuntimeException("Failed to connect to the database after multiple attempts.");
+        }
     }
 
     public void disconnect() {
