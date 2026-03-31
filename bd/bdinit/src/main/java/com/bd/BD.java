@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -12,7 +13,7 @@ public class BD {
     private static BD instance;
 
     private static final Properties properties = new Properties();
-    public static Connection connection;
+    private Connection connection;
 
     public static BD getInstance() {
         if (instance == null) {
@@ -101,4 +102,12 @@ public class BD {
         }
     }
 
+    public PreparedStatement preparStatement(String sql) {
+        try {
+            return connection.prepareStatement(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to prepare statement: " + sql);
+        }
+    }
 }

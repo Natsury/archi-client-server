@@ -8,6 +8,8 @@ public class App
         // Initialize the database connection and setup
         BD bd = BD.getInstance();
         bd.initializeBD();
+        // Create initial data in the database
+        InitData.createData();
         System.out.println("Application started successfully!");
     }
 }
