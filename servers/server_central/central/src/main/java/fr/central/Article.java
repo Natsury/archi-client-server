@@ -8,12 +8,14 @@ public class Article implements Serializable {
     private final String name;
     private final Double price;
     private final String type;
+    private final int stock;
 
-    public Article(Long reference, String name, Double price, String type) {
+    public Article(Long reference, String name, Double price, String type, int stock) {
         this.reference = reference;
         this.name = name;
         this.price = price;
         this.type = type;
+        this.stock = stock;
     }
 
     public Long getReference() {
@@ -32,11 +34,16 @@ public class Article implements Serializable {
         return type;
     }
 
+    public int getStock() {
+        return stock;
+    }
+
     public String ToString() {
         return "Article :" +
                 "reference = " + reference +
                 ", name = '" + name + '\'' +
                 ", price = " + price +
-                ", type = '" + type + '\'';
+                ", type = '" + type + '\'' +
+                ", stock = " + stock;
     }
 }
