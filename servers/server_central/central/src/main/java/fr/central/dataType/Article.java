@@ -1,4 +1,4 @@
-package fr.central;
+package fr.central.datatype;
 
 import java.io.Serializable;
 

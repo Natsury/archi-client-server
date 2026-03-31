@@ -4,8 +4,8 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-import fr.central.Article;
-import fr.central.Facture;
+import fr.central.datatype.Article;
+import fr.central.datatype.Facture;
 
 public interface IHeptathlon extends Remote{
     Article showStocks(Long reference) throws RemoteException;
