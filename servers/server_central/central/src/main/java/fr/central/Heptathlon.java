@@ -1,15 +1,20 @@
 package fr.central;
 
 import java.rmi.RemoteException;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
+import fr.central.bd.Context;
 import fr.central.datatype.Article;
 import fr.central.datatype.Facture;
 import fr.central.interfaces.IHeptathlon;
 
-public abstract class Heptathlon implements IHeptathlon {
+public class Heptathlon implements IHeptathlon {
+    private final Context context;
 
-    public Heptathlon() {
+    public Heptathlon(Context context) {
+        this.context = context;
     }
 
     @Override
@@ -25,13 +30,32 @@ public abstract class Heptathlon implements IHeptathlon {
     }
 
     @Override
-    public Article showStocks(Long reference) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showStocks'");
+    public List<Article> showStocks(Long reference) throws RemoteException {
+        String query = "SELECT * FROM article WHERE Reference = " + reference;
+        List<Article> articles = new ArrayList<>();
+        ResultSet resultSet = context.GetStatement(query);
+        try {
+            while (resultSet.next()) {
+                Article article = new Article(
+                        resultSet.getLong("reference"),
+                        resultSet.getDouble("prix"),
+                        resultSet.getString("type"),
+                        resultSet.getInt("stock")
+                );  
+                articles.add(article);              
+            }
+
+            return articles;
+            
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new RemoteException("Error while fetching stocks for reference: " + reference, e);
+        }
     }
 
     @Override
-    public Article getProduct(String type) throws RemoteException {
+    public List<Article> getProduct(String type) throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getProduct'");
     }

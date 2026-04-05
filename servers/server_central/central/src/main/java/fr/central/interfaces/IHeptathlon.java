@@ -8,8 +8,8 @@ import fr.central.datatype.Article;
 import fr.central.datatype.Facture;
 
 public interface IHeptathlon extends Remote{
-    Article showStocks(Long reference) throws RemoteException;
-    Article getProduct(String type) throws RemoteException;
+    List<Article> showStocks(Long reference) throws RemoteException;
+    List<Article> getProduct(String type) throws RemoteException;
     void BuyProduct(Article article) throws RemoteException;
     void BuyProduct(Article article, int quantity) throws RemoteException;
     void BuyProduct(Long reference, int quantity) throws RemoteException;
