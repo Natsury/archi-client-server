@@ -21,9 +21,9 @@ services:
       retries: 10
       start_period: 30s
 
-  central:
-    build: ./servers/server_central/central/
-    container_name: central_server
+  magasin_server:
+    build: ./servers/server_client/client/
+    container_name: magasin_server
     restart: no
     ports:
       - "1099:1099"
