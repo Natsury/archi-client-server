@@ -56,8 +56,26 @@ public class Heptathlon implements IHeptathlon {
 
     @Override
     public List<Article> getProduct(String type) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getProduct'");
+        String query = "SELECT * FROM article WHERE Type = '" + type + "'";
+        List<Article> articles = new ArrayList<>();
+        ResultSet resultSet = context.GetStatement(query);
+        try {
+            while (resultSet.next()) {
+                Article article = new Article(
+                        resultSet.getLong("reference"),
+                        resultSet.getDouble("prix"),
+                        resultSet.getString("type"),
+                        resultSet.getInt("stock")
+                ); 
+                if(article.getStock() > 0) articles.add(article);              
+            }
+
+            return articles;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            throw new RemoteException("Error while fetching stocks for type: " + type, e);
+        }
     }
 
     @Override
