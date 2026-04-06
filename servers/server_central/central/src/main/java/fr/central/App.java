@@ -1,9 +1,6 @@
 package fr.central;
 
-import java.util.Iterator;
-
 import fr.central.bd.Context;
-import fr.central.datatype.Article;
 
 public class App {
 
@@ -11,11 +8,12 @@ public class App {
         try {
             Context context = Context.getInstance();
             Heptathlon heptathlon = new Heptathlon(context);
-            Iterator<Article> res = heptathlon.getProduct("Laptop").iterator();
-            while (res.hasNext()){
-                Article article = res.next();
-                System.out.println(article.ToString());
-            }
+
+            Context.getInstance().ExecuteUpdate(
+                "INSERT INTO FACTURE (Date_fac, Prix_total, Mode_paiement) VALUES ('2026-01-01', 0, 'null')"
+            );
+
+            System.out.println(heptathlon.BuyProduct(1L, 1));
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Failed to start the Heptathlon server: " + e.getMessage());

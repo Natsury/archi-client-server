@@ -10,10 +10,10 @@ import fr.central.datatype.Facture;
 public interface IHeptathlon extends Remote{
     List<Article> showStocks(Long reference) throws RemoteException;
     List<Article> getProduct(String type) throws RemoteException;
-    void BuyProduct(Article article) throws RemoteException;
-    void BuyProduct(Article article, int quantity) throws RemoteException;
-    void BuyProduct(Long reference, int quantity) throws RemoteException;
-    void BuyProduct(Long reference) throws RemoteException;
+    boolean BuyProduct(Article article, int factureId) throws RemoteException;
+    boolean BuyProduct(Article article, int quantity, int factureId) throws RemoteException;
+    boolean BuyProduct(Long reference, int quantity, int factureId) throws RemoteException;
+    boolean BuyProduct(Long reference, int factureId) throws RemoteException;
     void payBill(int num_Facture) throws RemoteException;
     void payBill(Facture facture) throws RemoteException;
     void showBill(int num_Facture) throws RemoteException;

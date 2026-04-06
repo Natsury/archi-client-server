@@ -32,6 +32,8 @@ services:
         condition: service_healthy
       mysql:
         condition: service_healthy
+      bdcreation:
+        condition: service_completed_successfully
 
   mysql:
     image: mysql:latest
