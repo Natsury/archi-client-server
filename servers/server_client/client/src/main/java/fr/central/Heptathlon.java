@@ -74,7 +74,6 @@ public class Heptathlon implements IHeptathlon {
                     + article.ToString() 
                     + ", requested quantity: " 
                     + quantity);
-            
             // Get the product in the panier table 
             String query = "SELECT * FROM panier WHERE reference = " 
             + article.getReference()  
@@ -84,8 +83,8 @@ public class Heptathlon implements IHeptathlon {
             if(resultSet.next()) {
                 // If the product is already in the panier, update the quantity
                 int existingQuantity = resultSet.getInt("Quantite");
-                String updateQuery = "UPDATE panier SET Quantite = " 
-                + (existingQuantity + quantity) 
+                String updateQuery = "UPDATE panier SET "
+                + "Quantite = " + (existingQuantity + quantity) 
                 + " WHERE reference = " + article.getReference() 
                 + " AND Num_Facture = " + factureId;
                 context.ExecuteUpdate(updateQuery);
