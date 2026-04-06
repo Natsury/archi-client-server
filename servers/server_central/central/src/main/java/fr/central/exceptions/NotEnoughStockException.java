@@ -1,16 +1,16 @@
 package fr.central.exceptions;
 
-public class NotEnoughtStockException extends Exception {
+public class NotEnoughStockException extends Exception {
 
-    public NotEnoughtStockException() {
+    public NotEnoughStockException() {
         super();
     }
 
-    public NotEnoughtStockException(String message) {
+    public NotEnoughStockException(String message) {
         super(message);
     }
 
-    public NotEnoughtStockException(String message, Throwable cause) {
+    public NotEnoughStockException(String message, Throwable cause) {
         super(message, cause);
     }
 }
