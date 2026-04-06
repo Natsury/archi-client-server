@@ -21,4 +21,15 @@ public class ArticleFacture extends Article{
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
+
+    @Override
+    public String toString() {
+        return "ArticleFacture{" +
+                "reference=" + getReference() +
+                ", price=" + getPrice() +
+                ", type='" + getType() + '\'' +
+                ", stock=" + getStock() +
+                ", quantity=" + quantity +
+                '}';
+    }
 }

@@ -43,4 +43,19 @@ public class Facture implements Serializable{
         this.prix_total += article.getPrice() * article.getQuantity();
     }
 
+    @Override
+    public String toString() {
+        String string = "Facture{" +
+            "num_Facture=" + num_Facture +
+            ", mode_paiement='" + mode_paiement + '\'' +
+            ", date_fac='" + date_fac + '\'' +
+            ", prix_total=" + prix_total + ", ";
+
+            for (ArticleFacture article : articles) {
+                string += "\narticle=" + article.toString() + ", ";
+            }
+        
+        return string + '}';
+    }
+
 }

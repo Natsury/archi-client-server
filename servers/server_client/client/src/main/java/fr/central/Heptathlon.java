@@ -2,11 +2,14 @@ package fr.central;
 
 import java.rmi.RemoteException;
 import java.sql.ResultSet;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.central.bd.Context;
 import fr.central.datatype.Article;
+import fr.central.datatype.ArticleFacture;
 import fr.central.datatype.Facture;
 import fr.central.exceptions.NotEnoughStockException;
 import fr.central.interfaces.IHeptathlon;
@@ -156,15 +159,56 @@ public class Heptathlon implements IHeptathlon {
     }
 
     @Override
-    public void payBill(int num_Facture) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'payBill'");
+    public boolean payBill(int num_Facture, String mode_paiement) throws RemoteException {
+        try {
+            String query = "SELECT * FROM facture WHERE Num_Facture = " + num_Facture;
+            ResultSet resultSet = context.GetStatement(query);
+            if(!resultSet.next()) {
+                throw new RemoteException("Facture with Num_Facture: " + num_Facture + " not found");
+            }
+
+            Facture facture = new Facture(
+                resultSet.getInt("Num_Facture"),
+                resultSet.getString("mode_paiement"),
+                resultSet.getString("date_fac"),
+                resultSet.getDouble("prix_total"),
+                new ArrayList<>()
+            );
+
+            ResultSet articlesResultSet = context.GetStatement("SELECT * FROM panier WHERE Num_Facture = " + num_Facture);
+            while (articlesResultSet.next()) {
+                ArticleFacture article = new ArticleFacture(
+                    articlesResultSet.getLong("reference"),
+                    articlesResultSet.getDouble("prix"),
+                    articlesResultSet.getString("type"),
+                    articlesResultSet.getInt("Quantite"),
+                    articlesResultSet.getInt("stock")
+                );
+                facture.addArticle(article);
+            }
+
+            return this.payBill(facture, mode_paiement);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RemoteException("Error while paying bill for facture: " + num_Facture, e);
+        }
     }
 
     @Override
-    public void payBill(Facture facture) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'payBill'");
+    public boolean payBill(Facture facture, String mode_paiement) throws RemoteException {
+        try {
+            String updateQuery = 
+                "UPDATE facture SET mode_paiement = '" + mode_paiement + "',"
+                + "Date_fac = '" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) + "',"
+                + "Prix_total = " + facture.getPrix_total() + " "
+                + "WHERE Num_Facture = " + facture.getNum_Facture();
+            context.ExecuteUpdate(updateQuery);
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RemoteException("Error while paying bill for facture: " + facture.toString(), e);
+        }
     }
 
     @Override
