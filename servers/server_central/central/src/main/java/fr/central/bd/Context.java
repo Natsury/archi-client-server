@@ -86,4 +86,17 @@ public class Context {
             throw new RuntimeException("Failed to create a statement: " + e);
         }
     }
+
+    public void ExecuteUpdate(String sql) {
+        try {
+            if (connection != null && !connection.isClosed()) {
+                PreparedStatement stmnt = connection.prepareStatement(sql);
+                stmnt.executeUpdate();
+            } else {
+                throw new RuntimeException("No active database connection.");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to create a statement: " + e);
+        }
+    }
 }
