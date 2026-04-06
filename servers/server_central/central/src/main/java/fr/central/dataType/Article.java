@@ -1,18 +1,16 @@
-package fr.central;
+package fr.central.datatype;
 
 import java.io.Serializable;
 
 public class Article implements Serializable {
     
     private final Long reference;
-    private final String name;
     private final Double price;
     private final String type;
     private final int stock;
 
-    public Article(Long reference, String name, Double price, String type, int stock) {
+    public Article(Long reference, Double price, String type, int stock) {
         this.reference = reference;
-        this.name = name;
         this.price = price;
         this.type = type;
         this.stock = stock;
@@ -20,10 +18,6 @@ public class Article implements Serializable {
 
     public Long getReference() {
         return reference;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public Double getPrice() {
@@ -41,7 +35,6 @@ public class Article implements Serializable {
     public String ToString() {
         return "Article :" +
                 "reference = " + reference +
-                ", name = '" + name + '\'' +
                 ", price = " + price +
                 ", type = '" + type + '\'' +
                 ", stock = " + stock;
