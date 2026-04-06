@@ -87,11 +87,12 @@ public class Context {
         }
     }
 
-    public void ExecuteUpdate(String sql) {
+    public PreparedStatement ExecuteUpdate(String sql) {
         try {
             if (connection != null && !connection.isClosed()) {
-                PreparedStatement stmnt = connection.prepareStatement(sql);
+                PreparedStatement stmnt = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
                 stmnt.executeUpdate();
+                return stmnt;
             } else {
                 throw new RuntimeException("No active database connection.");
             }

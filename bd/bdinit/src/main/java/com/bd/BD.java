@@ -84,7 +84,7 @@ public class BD {
             connection.createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS `Facture` ("
                     + "  `Num_Facture` int NOT NULL AUTO_INCREMENT,"
                     + "  `Mode_paiement` VARCHAR(50),"
-                    + "  `Date_fac` date NOT NULL,"
+                    + "  `Date_fac` date,"
                     + "  `Prix_total` decimal(10,2) NOT NULL,"
                     + "  PRIMARY KEY (`Num_Facture`)"
                     + ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;");

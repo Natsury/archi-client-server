@@ -2,11 +2,14 @@ package fr.central;
 
 import java.rmi.RemoteException;
 import java.sql.ResultSet;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.central.bd.Context;
 import fr.central.datatype.Article;
+import fr.central.datatype.ArticleFacture;
 import fr.central.datatype.Facture;
 import fr.central.exceptions.NotEnoughStockException;
 import fr.central.interfaces.IHeptathlon;
@@ -21,20 +24,22 @@ public class Heptathlon implements IHeptathlon {
     @Override
     public boolean BuyProduct(Long reference, int quantity, int factureId) throws RemoteException {
         String query = "SELECT * FROM article WHERE Reference = " + reference;
-        List<Article> articles = new ArrayList<>();
         ResultSet resultSet = context.GetStatement(query);
         try {
-            while (resultSet.next()) {
-                Article article = new Article(
+            if (!resultSet.next()) {
+                throw new RemoteException("Article with reference: " + reference + " not found");
+            }
+
+            Article article = new Article(
                         resultSet.getLong("reference"),
                         resultSet.getDouble("prix"),
                         resultSet.getString("type"),
                         resultSet.getInt("stock")
-                );  
-                articles.add(article);              
-            }
+            );
 
-            return BuyProduct(articles.get(0), quantity, factureId);
+            System.out.println("Fetched article: " + article.toString());
+
+            return BuyProduct(article, quantity, factureId);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -71,10 +76,9 @@ public class Heptathlon implements IHeptathlon {
             if(article.getStock() < quantity) 
                 throw new NotEnoughStockException(
                     "Not enough stock for article: " 
-                    + article.ToString() 
+                    + article.toString() 
                     + ", requested quantity: " 
                     + quantity);
-            
             // Get the product in the panier table 
             String query = "SELECT * FROM panier WHERE reference = " 
             + article.getReference()  
@@ -84,8 +88,8 @@ public class Heptathlon implements IHeptathlon {
             if(resultSet.next()) {
                 // If the product is already in the panier, update the quantity
                 int existingQuantity = resultSet.getInt("Quantite");
-                String updateQuery = "UPDATE panier SET Quantite = " 
-                + (existingQuantity + quantity) 
+                String updateQuery = "UPDATE panier SET "
+                + "Quantite = " + (existingQuantity + quantity) 
                 + " WHERE reference = " + article.getReference() 
                 + " AND Num_Facture = " + factureId;
                 context.ExecuteUpdate(updateQuery);
@@ -157,15 +161,64 @@ public class Heptathlon implements IHeptathlon {
     }
 
     @Override
-    public void payBill(int num_Facture) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'payBill'");
+    public boolean payBill(int num_Facture, String mode_paiement) throws RemoteException {
+        try {
+            String query = "SELECT * FROM facture WHERE Num_Facture = " + num_Facture;
+            ResultSet resultSet = context.GetStatement(query);
+            if(!resultSet.next()) {
+                throw new RemoteException("Facture with Num_Facture: " + num_Facture + " not found");
+            }
+
+            Facture facture = new Facture(
+                resultSet.getInt("Num_Facture"),
+                resultSet.getString("mode_paiement"),
+                resultSet.getString("date_fac"),
+                resultSet.getDouble("prix_total"),
+                new ArrayList<>()
+            );
+
+            ResultSet articlesResultSet = context.GetStatement("SELECT * FROM panier WHERE Num_Facture = " + num_Facture);
+            while (articlesResultSet.next()) {
+
+                ResultSet article = context.GetStatement(
+                    "SELECT * FROM article WHERE reference = " + articlesResultSet.getLong("reference"));
+
+                if(!article.next()) {
+                    throw new RemoteException("Article with reference: " + articlesResultSet.getLong("reference") + " not found");
+                }
+                
+                ArticleFacture articleFacture = new ArticleFacture(
+                    articlesResultSet.getLong("reference"),
+                    article.getDouble("prix"),
+                    article.getString("type"),
+                    article.getInt("stock"),
+                    articlesResultSet.getInt("Quantite")
+                );
+                facture.addArticle(articleFacture);
+            }
+
+            return this.payBill(facture, mode_paiement);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RemoteException("Error while paying bill for facture: " + num_Facture, e);
+        }
     }
 
     @Override
-    public void payBill(Facture facture) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'payBill'");
+    public boolean payBill(Facture facture, String mode_paiement) throws RemoteException {
+        try {
+            String updateQuery = 
+                "UPDATE facture SET mode_paiement = '" + mode_paiement + "',"
+                + "Date_fac = '" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "',"
+                + "Prix_total = " + facture.getPrix_total() + " "
+                + "WHERE Num_Facture = " + facture.getNum_Facture();
+            context.ExecuteUpdate(updateQuery);
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RemoteException("Error while paying bill for facture: " + facture.toString(), e);
+        }
     }
 
     @Override

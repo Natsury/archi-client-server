@@ -32,7 +32,8 @@ public class Article implements Serializable {
         return stock;
     }
 
-    public String ToString() {
+    @Override
+    public String toString() {
         return "Article :" +
                 "reference = " + reference +
                 ", price = " + price +

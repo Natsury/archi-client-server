@@ -14,8 +14,8 @@ public interface IHeptathlon extends Remote{
     boolean BuyProduct(Article article, int quantity, int factureId) throws RemoteException;
     boolean BuyProduct(Long reference, int quantity, int factureId) throws RemoteException;
     boolean BuyProduct(Long reference, int factureId) throws RemoteException;
-    void payBill(int num_Facture) throws RemoteException;
-    void payBill(Facture facture) throws RemoteException;
+    boolean payBill(int num_Facture, String mode_paiement) throws RemoteException;
+    boolean payBill(Facture facture, String mode_paiement) throws RemoteException;
     void showBill(int num_Facture) throws RemoteException;
     void showBill(Facture facture) throws RemoteException;
     void calculateCA() throws RemoteException;
