@@ -24,20 +24,22 @@ public class Heptathlon implements IHeptathlon {
     @Override
     public boolean BuyProduct(Long reference, int quantity, int factureId) throws RemoteException {
         String query = "SELECT * FROM article WHERE Reference = " + reference;
-        List<Article> articles = new ArrayList<>();
         ResultSet resultSet = context.GetStatement(query);
         try {
-            while (resultSet.next()) {
-                Article article = new Article(
+            if (!resultSet.next()) {
+                throw new RemoteException("Article with reference: " + reference + " not found");
+            }
+
+            Article article = new Article(
                         resultSet.getLong("reference"),
                         resultSet.getDouble("prix"),
                         resultSet.getString("type"),
                         resultSet.getInt("stock")
-                );  
-                articles.add(article);              
-            }
+            );
 
-            return BuyProduct(articles.get(0), quantity, factureId);
+            System.out.println("Fetched article: " + article.toString());
+
+            return BuyProduct(article, quantity, factureId);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -74,7 +76,7 @@ public class Heptathlon implements IHeptathlon {
             if(article.getStock() < quantity) 
                 throw new NotEnoughStockException(
                     "Not enough stock for article: " 
-                    + article.ToString() 
+                    + article.toString() 
                     + ", requested quantity: " 
                     + quantity);
             // Get the product in the panier table 
@@ -177,14 +179,22 @@ public class Heptathlon implements IHeptathlon {
 
             ResultSet articlesResultSet = context.GetStatement("SELECT * FROM panier WHERE Num_Facture = " + num_Facture);
             while (articlesResultSet.next()) {
-                ArticleFacture article = new ArticleFacture(
+
+                ResultSet article = context.GetStatement(
+                    "SELECT * FROM article WHERE reference = " + articlesResultSet.getLong("reference"));
+
+                if(!article.next()) {
+                    throw new RemoteException("Article with reference: " + articlesResultSet.getLong("reference") + " not found");
+                }
+                
+                ArticleFacture articleFacture = new ArticleFacture(
                     articlesResultSet.getLong("reference"),
-                    articlesResultSet.getDouble("prix"),
-                    articlesResultSet.getString("type"),
-                    articlesResultSet.getInt("Quantite"),
-                    articlesResultSet.getInt("stock")
+                    article.getDouble("prix"),
+                    article.getString("type"),
+                    article.getInt("stock"),
+                    articlesResultSet.getInt("Quantite")
                 );
-                facture.addArticle(article);
+                facture.addArticle(articleFacture);
             }
 
             return this.payBill(facture, mode_paiement);
@@ -199,7 +209,7 @@ public class Heptathlon implements IHeptathlon {
         try {
             String updateQuery = 
                 "UPDATE facture SET mode_paiement = '" + mode_paiement + "',"
-                + "Date_fac = '" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")) + "',"
+                + "Date_fac = '" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "',"
                 + "Prix_total = " + facture.getPrix_total() + " "
                 + "WHERE Num_Facture = " + facture.getNum_Facture();
             context.ExecuteUpdate(updateQuery);

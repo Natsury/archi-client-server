@@ -39,8 +39,11 @@ public class Facture implements Serializable{
     }
 
     public void addArticle(ArticleFacture article) {
+        System.out.println("Added article to facture: " + article.toString());
         this.articles.add(article);
         this.prix_total += article.getPrice() * article.getQuantity();
+
+        System.out.println("Updated facture total price: " + this.prix_total);
     }
 
     @Override

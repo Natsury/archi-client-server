@@ -4,7 +4,7 @@ public class ArticleFacture extends Article{
 
     private int quantity;
 
-    public ArticleFacture(Long reference, Double price, String type, int quantity, int stock) {
+    public ArticleFacture(Long reference, Double price, String type, int stock, int quantity) {
         super(reference, price, type, stock);
         this.quantity = quantity;
     }
