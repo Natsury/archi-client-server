@@ -222,15 +222,58 @@ public class Heptathlon implements IHeptathlon {
     }
 
     @Override
-    public void showBill(int num_Facture) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showBill'");
+    public String showBill(int num_Facture) throws RemoteException {
+        try {
+            String query = "SELECT * FROM facture WHERE Num_Facture = " + num_Facture;
+            ResultSet resultSet = context.GetStatement(query);
+            if(!resultSet.next()) {
+                throw new RemoteException("Facture with Num_Facture: " + num_Facture + " not found");
+            }
+
+            Facture facture = new Facture(
+                resultSet.getInt("Num_Facture"),
+                resultSet.getString("mode_paiement"),
+                resultSet.getString("date_fac"),
+                resultSet.getDouble("prix_total"),
+                new ArrayList<>()
+            );
+
+            return showBill(facture);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RemoteException("Error while showing bill for facture: " + num_Facture, e);
+        }
+
     }
 
     @Override
-    public void showBill(Facture facture) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showBill'");
+    public String showBill(Facture facture) throws RemoteException {
+        try {
+            ResultSet articlesResultSet = context.GetStatement("SELECT * FROM panier WHERE Num_Facture = " + facture.getNum_Facture());
+            while (articlesResultSet.next()) {
+
+                ResultSet article = context.GetStatement(
+                    "SELECT * FROM article WHERE reference = " + articlesResultSet.getLong("reference"));
+
+                if(!article.next()) {
+                    throw new RemoteException("Article with reference: " + articlesResultSet.getLong("reference") + " not found");
+                }
+                
+                ArticleFacture articleFacture = new ArticleFacture(
+                    articlesResultSet.getLong("reference"),
+                    article.getDouble("prix"),
+                    article.getString("type"),
+                    article.getInt("stock"),
+                    articlesResultSet.getInt("Quantite")
+                );
+                facture.addArticle(articleFacture);
+            }
+
+            return facture.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RemoteException("Error while showing bill for facture: " + facture.toString(), e);
+        }
     }
 
     @Override
