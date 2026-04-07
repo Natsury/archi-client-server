@@ -44,7 +44,7 @@
           <configuration>
               <archive>
                   <manifest>
-                      <mainClass>fr.central.App</mainClass>
+                      <mainClass>fr.client.App</mainClass>
                   </manifest>
               </archive>
               <descriptorRefs>
@@ -86,7 +86,7 @@
                 <manifest>
                   <addClasspath>true</addClasspath>
                   <classpathPrefix>lib/</classpathPrefix>
-                  <mainClass>fr.central.App</mainClass>
+                  <mainClass>fr.client.App</mainClass>
                 </manifest>
               </archive>
             </configuration>
