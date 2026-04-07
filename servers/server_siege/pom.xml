@@ -3,8 +3,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>fr.central</groupId>
-    <artifactId>central</artifactId>
+    <groupId>fr.siege</groupId>
+    <artifactId>server_siege</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -15,14 +15,12 @@
     </properties>
 
     <dependencies>
-      <dependency>
-        <groupId>mysql</groupId>
-        <artifactId>mysql-connector-java</artifactId>
-        <version>8.0.33</version>
-      </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.33</version>
+        </dependency>
     </dependencies>
-
-
 
     <build>
       <resources>
@@ -37,7 +35,7 @@
           <configuration>
               <archive>
                   <manifest>
-                      <mainClass>fr.client.App</mainClass>
+                      <mainClass>fr.siege.App</mainClass>
                   </manifest>
               </archive>
               <descriptorRefs>
@@ -79,7 +77,7 @@
                 <manifest>
                   <addClasspath>true</addClasspath>
                   <classpathPrefix>lib/</classpathPrefix>
-                  <mainClass>fr.client.App</mainClass>
+                  <mainClass>fr.siege.App</mainClass>
                 </manifest>
               </archive>
             </configuration>
