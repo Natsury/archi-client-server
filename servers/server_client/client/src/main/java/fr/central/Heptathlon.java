@@ -1,6 +1,7 @@
 package fr.central;
 
 import java.rmi.RemoteException;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -305,20 +306,56 @@ public class Heptathlon implements IHeptathlon {
     }
 
     @Override
-    public Article addProduct(Article article) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addProduct'");
+    public List<Article> addProduct(Article article) throws RemoteException {
+        List<Article> articles = new ArrayList<>();
+        articles.add(article);
+        return addProducts(articles);
     }
 
     @Override
-    public Article addProduct(String type, double prix, int stock) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addProduct'");
+    public List<Article> addProduct(String type, double prix, int stock) throws RemoteException {
+        Article article = new Article(null, prix, type, stock);
+        return addProduct(article); 
     }
 
     @Override
     public List<Article> addProducts(List<Article> articles) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addProducts'");
+        try {
+            List<PreparedStatement> statements = new ArrayList<>();
+            for (Article article : articles) {
+                String insertQuery = "INSERT INTO article (Type, Prix, Stock) VALUES ('" 
+                + article.getType() + "', " 
+                + article.getPrice() + ", " 
+                + article.getStock() + ")";
+                statements.add(context.ExecuteUpdate(insertQuery));
+            }
+
+            List<Article> createdArticles = new ArrayList<>();
+            for (PreparedStatement preparedStatement : statements) {
+                ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+                generatedKeys.next();
+                long reference = generatedKeys.getLong(1);
+
+                String query = "SELECT * FROM article WHERE Reference = " + reference;
+                ResultSet resultSet = context.GetStatement(query);
+                resultSet.next();
+                Article createdArticle = new Article(
+                    resultSet.getLong("Reference"),
+                    resultSet.getDouble("Prix"),
+                    resultSet.getString("Type"),
+                    resultSet.getInt("Stock"));
+
+                createdArticles.add(createdArticle);
+            }
+
+            if(createdArticles.size() != articles.size()) {
+                throw new RemoteException("Error while adding products: " + articles.toString());
+            }
+
+            return createdArticles;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RemoteException("Error while adding products: " + articles.toString(), e);
+        }
     }
 }

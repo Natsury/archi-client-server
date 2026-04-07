@@ -21,7 +21,7 @@ public interface IHeptathlon extends Remote{
     String showBill(Facture facture) throws RemoteException;
     String calculateCA() throws RemoteException;
     String calculateCA(LocalDate dateFacturation) throws RemoteException;
-    Article addProduct(Article article) throws RemoteException;
-    Article addProduct(String type, double prix, int stock) throws RemoteException;
+    List<Article> addProduct(Article article) throws RemoteException;
+    List<Article> addProduct(String type, double prix, int stock) throws RemoteException;
     List<Article> addProducts(List<Article> articles) throws RemoteException;
 }

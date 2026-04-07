@@ -1,8 +1,9 @@
 package fr.central;
 
-import java.time.LocalDate;
+import java.util.List;
 
 import fr.central.bd.Context;
+import fr.central.datatype.Article;
 
 public class App {
 
@@ -20,7 +21,11 @@ public class App {
             // resultSet.next();
             // int factureId = resultSet.getInt(1);
 
-            System.out.println(heptathlon.calculateCA(LocalDate.of(2026, 4, 6)));
+            Article article = new Article(null, 10.0, "TEST", 615);
+            Article article2 = new Article(null, 20.0, "test", 816457);
+
+            List<Article> articles = List.of(article, article2);
+            System.out.println(heptathlon.addProducts(articles));
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Failed to start the Heptathlon server: " + e.getMessage());
