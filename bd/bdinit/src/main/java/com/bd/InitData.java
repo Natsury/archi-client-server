@@ -1,11 +1,27 @@
 package com.bd;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.Random;
 
 public class InitData {
 
     public static void createData() {
+
+        String testQuery = "SELECT COUNT(*) AS count FROM Article";
+        try {
+            PreparedStatement pstmt = BD.getInstance().preparStatement(testQuery);
+            ResultSet resultSet = pstmt.executeQuery();
+            if (resultSet.next()) {
+                int count = resultSet.getInt("count");
+                if (count > 0) {
+                    System.out.println("Data already exists in the Article table. Skipping data generation.");
+                    return;
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to check existing data: " + e);
+        }
 
         // Statement de préparation pour l'insertion de données
         String insertSQL = "INSERT INTO Article (Type, Prix, Stock) VALUES (?, ?, ?)";

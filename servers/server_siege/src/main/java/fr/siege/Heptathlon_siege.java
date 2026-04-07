@@ -20,6 +20,7 @@ public class Heptathlon_siege implements IHeptathlon_siege{
     @Override
     public void updateStock(Long reference, int newStock) throws RemoteException {
         try {
+            
             String query = "UPDATE article SET stock = " + newStock + " WHERE reference = " + reference;
             context.ExecuteUpdate(query);
         } catch (Exception e) {
@@ -32,14 +33,33 @@ public class Heptathlon_siege implements IHeptathlon_siege{
 
     @Override
     public void updatePrice(Long reference, double newPrice) throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updatePrice'");
+        try {
+            String query = "UPDATE article SET prix = " + newPrice + " WHERE reference = " + reference;
+            context.ExecuteUpdate(query);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Failed to update price: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public void updatePrices() throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updatePrices'");
+    public void updatePrices(double percentPrice) throws RemoteException {
+        String query = "SELECT reference, prix FROM article";
+        try {
+            ResultSet resultSet = context.GetStatement(query);
+            while (resultSet.next()) {
+                Long reference = resultSet.getLong("reference");
+                double currentPrice = resultSet.getDouble("prix");
+                double newPrice = currentPrice * percentPrice;
+                System.out.println("Updating price for reference " + reference + ": " + currentPrice + " -> " + newPrice);
+                updatePrice(reference, newPrice);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("Failed to update prices: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -72,6 +92,9 @@ public class Heptathlon_siege implements IHeptathlon_siege{
                     + article.getQuantity() + ")";
 
                     context.ExecuteUpdate(articleQuery);
+                    if(article.getStock() - article.getQuantity() < 0) {
+                        throw new RuntimeException("Not enough stock for article reference: " + article.getReference());
+                    }
                     updateStock(article.getReference(), article.getStock() - article.getQuantity());
                 }
             } else {
