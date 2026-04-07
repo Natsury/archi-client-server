@@ -1,4 +1,4 @@
-package fr.client.datatype;
+package fr.siege.datatype;
 
 import java.io.Serializable;
 

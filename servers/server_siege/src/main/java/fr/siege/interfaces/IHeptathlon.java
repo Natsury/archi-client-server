@@ -1,4 +1,4 @@
-package fr.client.interfaces;
+package fr.siege.interfaces;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

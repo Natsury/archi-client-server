@@ -1,0 +1,15 @@
+package fr.siege.interfaces;
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.util.List;
+
+import fr.siege.datatype.Facture;
+
+public interface  IHeptathlon_siege extends Remote{
+    void updateStock(Long reference, int newStock) throws RemoteException;
+    void updatePrice(Long reference, double newPrice) throws RemoteException;
+    void updatePrices() throws RemoteException;
+    void saveBills(List<Facture> facture) throws RemoteException;
+    void saveBill(Facture facture) throws RemoteException;
+}
