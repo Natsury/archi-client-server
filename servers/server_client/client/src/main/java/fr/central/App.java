@@ -1,5 +1,7 @@
 package fr.central;
 
+import java.time.LocalDate;
+
 import fr.central.bd.Context;
 
 public class App {
@@ -18,7 +20,7 @@ public class App {
             // resultSet.next();
             // int factureId = resultSet.getInt(1);
 
-            System.out.println(heptathlon.showBill(7));
+            System.out.println(heptathlon.calculateCA(LocalDate.of(2026, 4, 6)));
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Failed to start the Heptathlon server: " + e.getMessage());

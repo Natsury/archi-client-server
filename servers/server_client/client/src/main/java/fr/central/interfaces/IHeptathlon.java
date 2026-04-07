@@ -2,6 +2,7 @@ package fr.central.interfaces;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.time.LocalDate;
 import java.util.List;
 
 import fr.central.datatype.Article;
@@ -18,7 +19,8 @@ public interface IHeptathlon extends Remote{
     boolean payBill(Facture facture, String mode_paiement) throws RemoteException;
     String showBill(int num_Facture) throws RemoteException;
     String showBill(Facture facture) throws RemoteException;
-    void calculateCA() throws RemoteException;
+    String calculateCA() throws RemoteException;
+    String calculateCA(LocalDate dateFacturation) throws RemoteException;
     Article addProduct(Article article) throws RemoteException;
     Article addProduct(String type, double prix, int stock) throws RemoteException;
     List<Article> addProducts(List<Article> articles) throws RemoteException;
