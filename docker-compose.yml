@@ -1,12 +1,55 @@
 services:
+  mysqlSiege:
+    image: mysql:latest
+    container_name: archi-bd-siege
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+      start_period: 45s
+    env_file:
+      - bd.env
+    ports:
+      - "3306:3306"
+    restart: always
+    volumes:
+      - ./bd/mysqlSiege:/var/lib/mysql
+
+  mysqlMagasin:
+    image: mysql:latest
+    container_name: archi-bd-magasin
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+      start_period: 45s
+    env_file:
+      - bd.env
+    ports:
+      - "3307:3306"
+    restart: always
+    volumes:
+      - ./bd/mysqlMagasin:/var/lib/mysql
 
   bdcreation:
-    build: ./bd/
+    build: ./bd/bdinit
     container_name: bd-creation
     restart: no
     depends_on:
-      mysql:
+      mysqlSiege:
         condition: service_healthy
+
+  bdinit_magasin:
+    build: ./bd/bdinit_magasin/
+    container_name: bd-init-magasin
+    restart: no
+    depends_on:
+      mysqlMagasin:
+        condition: service_healthy
+      mysqlSiege:
+        condition: service_healthy
+      bdcreation:
+        condition: service_completed_successfully
 
   rmi:
     build: ./rmi/
@@ -30,23 +73,7 @@ services:
     depends_on:
       rmi:
         condition: service_healthy
-      mysql:
+      mysqlMagasin:
         condition: service_healthy
       bdcreation:
         condition: service_completed_successfully
-
-  mysql:
-    image: mysql:latest
-    container_name: archi-bd
-    healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
-      start_period: 45s
-    env_file:
-      - bd.env
-    ports:
-      - "3306:3306"
-    restart: always
-    volumes:
-      - ./bd/mysql:/var/lib/mysql

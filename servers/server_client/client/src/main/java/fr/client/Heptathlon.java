@@ -1,4 +1,4 @@
-package fr.central;
+package fr.client;
 
 import java.rmi.RemoteException;
 import java.sql.PreparedStatement;
@@ -9,12 +9,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.central.bd.Context;
-import fr.central.datatype.Article;
-import fr.central.datatype.ArticleFacture;
-import fr.central.datatype.Facture;
-import fr.central.exceptions.NotEnoughStockException;
-import fr.central.interfaces.IHeptathlon;
+import fr.client.bd.Context;
+import fr.client.datatype.Article;
+import fr.client.datatype.ArticleFacture;
+import fr.client.datatype.Facture;
+import fr.client.exceptions.NotEnoughStockException;
+import fr.client.interfaces.IHeptathlon;
 
 public class Heptathlon implements IHeptathlon {
     private final Context context;

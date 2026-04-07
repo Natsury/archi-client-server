@@ -1,4 +1,4 @@
-package fr.central.bd;
+package fr.client.bd;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,9 +1,9 @@
-package fr.central;
+package fr.client;
 
 import java.util.List;
 
-import fr.central.bd.Context;
-import fr.central.datatype.Article;
+import fr.client.bd.Context;
+import fr.client.datatype.Article;
 
 public class App {
 
