@@ -1,31 +1,47 @@
 package fr.client;
 
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-import fr.client.bd.Context;
-import fr.client.datatype.Article;
+import fr.siege.datatype.Facture;
+import fr.siege.interfaces.IHeptathlon_siege;
 
 public class App {
 
     public static void main(String[] args) {
         try {
-            Context context = Context.getInstance();
-            Heptathlon heptathlon = new Heptathlon(context);
+            Heptathlon heptathlon = new Heptathlon();
 
-            // PreparedStatement stmt = Context.getInstance().ExecuteUpdate(
-            //     "INSERT INTO FACTURE (Date_fac, Prix_total, Mode_paiement) VALUES (null, 0, 'null')"
-            // );
+            Registry registry = LocateRegistry.getRegistry("siege_server", 1099);
 
-            // ResultSet resultSet = stmt.getGeneratedKeys();
+            IHeptathlon_siege stub = (IHeptathlon_siege) registry.lookup("HeptathlonSiege");
+            System.out.println("Heptathlon Siege stub is ready.");
 
-            // resultSet.next();
-            // int factureId = resultSet.getInt(1);
+            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-            Article article = new Article(null, 10.0, "TEST", 615);
-            Article article2 = new Article(null, 20.0, "test", 816457);
+            scheduler.scheduleAtFixedRate(() -> {
+                System.out.println("Saving bills...");
+                try {
+                    List<Facture> factures = heptathlon.getAllFactures();
+                    
+                    stub.saveBills(factures);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.err.println("Failed to save bills: " + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+            }, 1, 1, TimeUnit.MINUTES);
 
-            List<Article> articles = List.of(article, article2);
-            System.out.println(heptathlon.addProducts(articles));
+            Facture facture = new Facture(0, null, null, 0, new ArrayList<>());
+            facture.setNum_Facture(heptathlon.CreateBill(facture));
+            heptathlon.BuyProduct(1L, 3, facture.getNum_Facture());
+            heptathlon.payBill(facture.getNum_Facture(), "cheque");
+
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Failed to start the Heptathlon server: " + e.getMessage());

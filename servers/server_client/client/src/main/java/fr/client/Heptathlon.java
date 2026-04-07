@@ -10,17 +10,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.client.bd.Context;
-import fr.client.datatype.Article;
-import fr.client.datatype.ArticleFacture;
-import fr.client.datatype.Facture;
 import fr.client.exceptions.NotEnoughStockException;
 import fr.client.interfaces.IHeptathlon;
+import fr.siege.datatype.Article;
+import fr.siege.datatype.ArticleFacture;
+import fr.siege.datatype.Facture;
 
 public class Heptathlon implements IHeptathlon {
     private final Context context;
 
-    public Heptathlon(Context context) {
-        this.context = context;
+    public Heptathlon() {
+        this.context = Context.getInstance();
+    }
+
+    public int CreateBill(Facture facture) throws RemoteException {
+        try {
+            String queryLastFacture = "SELECT Num_Facture FROM facture ORDER BY Num_Facture DESC LIMIT 1";
+            ResultSet resultSet = context.GetStatement(queryLastFacture);
+            int lastFactureId = 1;
+            if(resultSet.next()){
+                lastFactureId = resultSet.getInt("Num_Facture");
+            }
+            
+            String insertQuery = "INSERT INTO facture (Num_Facture, Prix_total) VALUES (" 
+            + lastFactureId + 1 + ", " + facture.getPrix_total() + ")";
+            PreparedStatement stmt = context.ExecuteUpdate(insertQuery);
+            ResultSet rs = stmt.getGeneratedKeys();
+            rs.next();
+            return rs.getInt(1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RemoteException("Error while creating bill for facture: " + facture.toString(), e);
+        }
     }
 
     @Override
@@ -130,7 +151,6 @@ public class Heptathlon implements IHeptathlon {
             }
 
             return articles;
-            
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -275,6 +295,50 @@ public class Heptathlon implements IHeptathlon {
         } catch (Exception e) {
             e.printStackTrace();
             throw new RemoteException("Error while showing bill for facture: " + facture.toString(), e);
+        }
+    }
+
+    public List<Facture> getAllFactures() throws RemoteException {
+        List<Facture> factures = new ArrayList<>();
+        try {
+            String query = "SELECT * FROM facture";
+            ResultSet resultSet = context.GetStatement(query);
+            while (resultSet.next()) {
+                Facture facture = new Facture(
+                    resultSet.getInt("Num_Facture"),
+                    resultSet.getString("mode_paiement"),
+                    resultSet.getString("date_fac"),
+                    resultSet.getDouble("prix_total"),
+                    new ArrayList<>()
+                );
+
+                String articlesQuery = "SELECT * FROM panier WHERE Num_Facture = " + facture.getNum_Facture();
+                ResultSet articlesResultSet = context.GetStatement(articlesQuery);
+
+                while (articlesResultSet.next()) {
+                    ResultSet article = context.GetStatement(
+                        "SELECT * FROM article WHERE reference = " + articlesResultSet.getLong("reference"));
+
+                    if(!article.next()) {
+                        throw new RemoteException("Article with reference: " + articlesResultSet.getLong("reference") + " not found");
+                    }
+                    
+                    ArticleFacture articleFacture = new ArticleFacture(
+                        articlesResultSet.getLong("reference"),
+                        article.getDouble("prix"),
+                        article.getString("type"),
+                        article.getInt("stock"),
+                        articlesResultSet.getInt("Quantite")
+                    );
+                    facture.addArticle(articleFacture);
+                }
+
+                factures.add(facture);
+            }
+            return factures;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RemoteException("Error while fetching all factures", e);
         }
     }
 

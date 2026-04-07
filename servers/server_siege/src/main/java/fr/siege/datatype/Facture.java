@@ -1,10 +1,10 @@
-package fr.client.datatype;
+package fr.siege.datatype;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class Facture implements Serializable{
-    private final int num_Facture;
+    private int num_Facture;
     private final String mode_paiement;
     private final String date_fac;
     private double prix_total;
@@ -16,6 +16,10 @@ public class Facture implements Serializable{
         this.date_fac = date_fac;
         this.prix_total = prix_total;
         this.articles = articles;
+    }
+
+    public void setNum_Facture(int num_Facture) {
+        this.num_Facture = num_Facture;
     }
 
     public int getNum_Facture() {
