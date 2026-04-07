@@ -27,7 +27,9 @@ public class BD {
 
     private BD() {
         try {
+            System.out.println("Connecting to the Magasin database...");
             connectMagasin();
+            System.out.println("Connecting to the Siege database...");
             connectSiege(); 
         } catch (Exception e) {
             throw new RuntimeException("Failed to connect to the database: " + e);

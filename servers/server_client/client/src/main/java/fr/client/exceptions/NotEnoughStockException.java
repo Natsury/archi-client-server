@@ -1,4 +1,4 @@
-package fr.central.exceptions;
+package fr.client.exceptions;
 
 public class NotEnoughStockException extends Exception {
 
