@@ -2,6 +2,7 @@ package fr.central;
 
 import java.rmi.RemoteException;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -277,9 +278,30 @@ public class Heptathlon implements IHeptathlon {
     }
 
     @Override
-    public void calculateCA() throws RemoteException {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'calculateCA'");
+    public String calculateCA() throws RemoteException {
+        try {
+            return calculateCA(LocalDate.now());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RemoteException("Error while calculating CA", e);
+        }
+    }
+
+    @Override
+    public String calculateCA(LocalDate dateFacturation) throws RemoteException {
+        String query = "SELECT SUM(Prix_total) as CA FROM facture " 
+        + "WHERE Date_fac = '" + dateFacturation.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")) + "'";
+        try {
+            ResultSet resultSet = context.GetStatement(query);
+            if (!resultSet.next()) {
+                throw new RemoteException("Error while calculating CA for date: " + dateFacturation.toString());
+            
+            }   
+            return Double.toString(resultSet.getDouble("CA"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RemoteException("Error while calculating CA", e);
+        }
     }
 
     @Override
